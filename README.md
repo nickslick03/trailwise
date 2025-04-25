@@ -48,6 +48,7 @@ Caleb Rice
 Ethan Espenshade
 Thatcher Eby
 Colin Touhey
+Annika Pomeroy
 
 #### Backend Contributors
 Luke Risser,
