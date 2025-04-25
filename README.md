@@ -47,6 +47,7 @@ Chris Copeland
 Caleb Rice
 Ethan Espenshade
 Thatcher Eby
+Nick Hogue 
 
 #### Backend Contributors
 Luke Risser,
