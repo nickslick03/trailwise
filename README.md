@@ -47,10 +47,13 @@ Chris Copeland
 Caleb Rice
 Ethan Espenshade
 Thatcher Eby
+Nick Hogue 
 Colin Touhey
 Annika Pomeroy
+Alex Georgeff
 Alex Kagoro
 
 #### Backend Contributors
-Luke Risser,
+Luke Risser
 Mukisa Serufusa
+Hazel Lim
