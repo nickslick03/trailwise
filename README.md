@@ -49,6 +49,7 @@ Ethan Espenshade
 Thatcher Eby
 Colin Touhey
 Annika Pomeroy
+Alex Kagoro
 
 #### Backend Contributors
 Luke Risser,
