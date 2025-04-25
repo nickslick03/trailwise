@@ -50,7 +50,9 @@ Thatcher Eby
 Nick Hogue 
 Colin Touhey
 Annika Pomeroy
+Alex Georgeff
 
 #### Backend Contributors
-Luke Risser,
+Luke Risser
 Mukisa Serufusa
+Hazel Lim
