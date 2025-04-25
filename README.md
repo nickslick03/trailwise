@@ -46,6 +46,7 @@ Chris Copeland
 #### Frontend Contributors
 Caleb Rice
 Ethan Espenshade
+Thatcher Eby
 
 #### Backend Contributors
 Luke Risser,
