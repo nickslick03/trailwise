@@ -51,5 +51,6 @@ Colin Touhey
 Annika Pomeroy
 
 #### Backend Contributors
-Luke Risser,
+Luke Risser
 Mukisa Serufusa
+Hazel Lim
