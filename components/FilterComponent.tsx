@@ -1,1 +1,35 @@
-// Pushing to have the folder for everyone
+"use client";
+
+import { BsFillFilterCircleFill } from "react-icons/bs";
+
+// Functionality for this to actually filter needs to be added still - needs back end
+
+function FilterComponent() {
+    return (
+        // Outer box
+        <div className="flex flex-col p-4 bg-white rounded-2xl shadow-md w-full max-w-fit m-auto">
+            {/* Title Section */}
+            <div className='flex flex-row gap-2 items-center'>
+                <BsFillFilterCircleFill></BsFillFilterCircleFill>
+                <div className="text-xl">Filters</div>
+            </div>
+            {/* Filters */}
+            <div className='flex flex-row gap-4 ml-6'>
+                <div className='flex flex-row gap-1'>
+                    <input type='checkbox'></input>
+                    <div>Horse Trail</div>
+                </div>
+                <div className='flex flex-row gap-1'>
+                    <input type='checkbox'></input>
+                    <div>Camping</div>
+                </div>
+                <div className='flex flex-row gap-1'>
+                    <input type='checkbox'></input>
+                    <div>Hiking</div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default FilterComponent;
