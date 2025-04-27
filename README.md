@@ -51,6 +51,7 @@ Nick Hogue
 Colin Touhey
 Annika Pomeroy
 Alex Georgeff
+Alex Kagoro
 
 #### Backend Contributors
 Luke Risser
