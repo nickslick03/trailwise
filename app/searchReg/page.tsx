@@ -2,7 +2,6 @@
 
 import Head from "next/head";
 import Search from "@/components/Search";
-import Mapbox from "@/components/Mapbox";
 import FilterComponent from "@/components/FilterComponent";
 import BlackBoxPark from "@/components/BlackBoxPark";
 //import NavigationBar from "@/components/NavigationBar";
