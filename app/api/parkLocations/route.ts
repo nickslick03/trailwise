@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 
 /**
- * Handle POST requests to the /api/directions endpoint. Returns the directions from coord1 to coord2
+ * Handle GET requests to the /api/parkLocations endpoint. Returns the directions from coord1 to coord2
  *
  * @param {Request} request - The incoming request object.
  * @return {Promise<NextResponse>} The response object.
  */
-export async function POST(request: Request) {
+export async function GET(request: Request) {
   const body = await request.json();
 
   try {
