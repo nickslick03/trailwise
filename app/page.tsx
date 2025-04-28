@@ -17,8 +17,11 @@ export default function Home() {
           <LoginPageBackgroundImage />
         </div>
 
-        <div className="flex  absolute top-8 justify-center z-0">
-          <Login_Image />
+        {/* Logo */}
+        <div className="absolute top-18 left-1/2 transform -translate-x-1/2 flex justify-center items-center z-50">
+        <div className="w-[200px] h-[200px]">
+            <Login_Image />
+          </div>
         </div>
 
       </main> 
