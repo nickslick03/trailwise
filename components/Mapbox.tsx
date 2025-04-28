@@ -5,7 +5,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-const Mapbox = () => {
+const Mapbox = ({ parks }: { parks: any[] }) => {
   const [error, setError] = useState(false);
   const [map, setMap] = useState<mapboxgl.Map | null>(null);
 
@@ -57,6 +57,9 @@ const Mapbox = () => {
       console.error('Geolocation is not supported by this browser.');
     }
   }, [map]);
+
+  // Display parks on map
+  useEffect(() => {}, [map, parks]);
 
   return error ? (
     <div className='w-full h-full flex justify-center items-center'>
