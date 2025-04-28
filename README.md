@@ -44,16 +44,16 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 Chris Copeland
 
 #### Frontend Contributors
-Caleb Rice
-Ethan Espenshade
-Thatcher Eby
-Nick Hogue 
-Colin Touhey
-Annika Pomeroy
-Alex Georgeff
+Caleb Rice, 
+Ethan Espenshade, 
+Thatcher Eby, 
+Nick Hogue, 
+Colin Touhey, 
+Annika Pomeroy, 
+Alex Georgeff, 
 Alex Kagoro
 
 #### Backend Contributors
-Luke Risser
-Mukisa Serufusa
+Luke Risser, 
+Mukisa Serufusa, 
 Hazel Lim
