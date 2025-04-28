@@ -52,14 +52,9 @@ Colin Touhey,
 Annika Pomeroy, 
 Alex Georgeff, 
 Alex Kagoro
+Hazel Lim
 
 #### Backend Contributors
-<<<<<<< HEAD
-Devon H. [327]
-Luke Risser
-Mukisa Serufusa
-=======
 Luke Risser, 
-Mukisa Serufusa, 
->>>>>>> a2914c27d20be6efef0d2e7d9ab8d0bc7c07c479
-Hazel Lim
+Mukisa Serufusa,
+Devon H.
