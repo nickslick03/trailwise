@@ -1,0 +1,27 @@
+import mysql from 'mysql2';
+
+mysql_connect( {
+  type: "mysql",
+  host: "localhost",
+  port: 3306,             // Connect to Superbase
+  username: "root",
+  password: "mysql",
+  database: "mysql",
+  entities: [
+      "https://supabase/project/alvmuuodakpsjwfvmspk/database" + "/entity/*.ts"
+  ],
+  synchronize: true,
+  logging: false
+} )
+
+let parkURL = window.location.href
+
+let parkName = mysql_query("SELECT name FROM park WHERE " + parkURL + " = park.link_url")  // Get park name from URL and map to UUID
+let parkUUID = mysql_query("SELECT park FROM park WHERE " + parkName + " = name")
+
+let username = this.Authorization.username
+let userUUID = mysql_query("SELECT user FROM user WHERE " + username + " = name")  // Get username and map to UUID
+
+let savedTime = Date.now() // Gets the current time 
+
+mysql_query("INSERT INTO saved_park(" + userUUID , parkUUID , savedTime + ")")  // Saves the park by inserting row into database

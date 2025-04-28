@@ -18,7 +18,7 @@ export default function LoginButton() {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">
             
-            <h1 className="text-3xl font-bold text-center m-10 bg-black text-white p-4 rounded-2xl border border-gray-500">
+            <h1 className="text-3xl font-bold text-center mb-10 bg-black text-white p-4 rounded-2xl border border-gray-500">
                 Welcome to Trailwise
             </h1>
             <form className="flex flex-col gap-4 p-6 bg-white rounded-2xl shadow-md w-full max-w-xs" action="/authenticate" method="POST">
