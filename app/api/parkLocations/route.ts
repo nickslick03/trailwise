@@ -8,14 +8,12 @@ import { createClient } from '@supabase/supabase-js';
  * @return {Promise<NextResponse>} The response object.
  */
 export async function GET(request: Request) {
-  const body = await request.json();
-
   try {
     const supabase = createClient(
       process.env.SUPABASE_URL || '',
       process.env.SUPABASE_KEY || ''
     );
-    const { data: park } = await supabase.from("park").select();
+    const { data: park } = await supabase.from('park').select();
     return NextResponse.json(park, { status: 200 });
   } catch (error) {
     return NextResponse.json(
