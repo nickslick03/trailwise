@@ -1,9 +1,11 @@
 'use client';
 
 import Mapbox from '@/components/Mapbox';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
+  const [parks, setParks] = useState([]);
+
   useEffect(() => {
     fetch('/api/parkLocations').then((response) => {
       if (!response.ok) {
@@ -18,7 +20,7 @@ export default function Home() {
   return (
     <div className='w-full h-full'>
       <main className='w-full h-full'>
-        <Mapbox />
+        <Mapbox parks={parks} />
       </main>
     </div>
   );
