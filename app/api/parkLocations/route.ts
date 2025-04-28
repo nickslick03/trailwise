@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { supabase } from '@/supabaseClient';
 
 /**
- * Handle GET requests to the /api/parkLocations endpoint. Returns the directions from coord1 to coord2
+ * Handle GET requests to the /api/parkLocations endpoint.
  *
  * @param {Request} request - The incoming request object.
  * @return {Promise<NextResponse>} The response object.
