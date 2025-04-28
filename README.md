@@ -54,12 +54,9 @@ Alex Georgeff,
 Alex Kagoro
 
 #### Backend Contributors
-<<<<<<< HEAD
-Devon H. [327]
-Luke Risser
-Mukisa Serufusa
-=======
 Luke Risser, 
 Mukisa Serufusa, 
->>>>>>> a2914c27d20be6efef0d2e7d9ab8d0bc7c07c479
-Hazel Lim
+Luke Risser, 
+Mukisa Serufusa, 
+Hazel Lim, 
+Devon H.
