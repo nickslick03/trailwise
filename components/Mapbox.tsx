@@ -1,13 +1,15 @@
-// components/Map.js
+// components/Mapbox.js
 import { useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-const Mapbox = () => {
+const Mapbox = ({ parks }: { parks: any[] }) => {
   const [error, setError] = useState(false);
   const [map, setMap] = useState<mapboxgl.Map | null>(null);
 
+  // Initialize Mapbox
   useEffect(() => {
     try {
       setMap(
@@ -27,9 +29,9 @@ const Mapbox = () => {
     }
   }, []);
 
+  // Display user's location
   useEffect(() => {
     if (map === null) return;
-    new mapboxgl.Marker({ color: 'red' }).setLngLat([-77.4, 41.5]).addTo(map);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -37,8 +39,12 @@ const Mapbox = () => {
           console.log('User location:', latitude, longitude);
 
           map.on('load', () => {
+            map.flyTo({
+              center: [longitude, latitude],
+              zoom: 12
+            });
             // marker at user's location
-            new mapboxgl.Marker({ color: 'red' })
+            new mapboxgl.Marker({ color: 'blue' })
               .setLngLat([longitude, latitude])
               .addTo(map);
           });
@@ -51,6 +57,9 @@ const Mapbox = () => {
       console.error('Geolocation is not supported by this browser.');
     }
   }, [map]);
+
+  // Display parks on map
+  useEffect(() => {}, [map, parks]);
 
   return error ? (
     <div className='w-full h-full flex justify-center items-center'>
