@@ -52,8 +52,8 @@ Colin Touhey,
 Annika Pomeroy, 
 Alex Georgeff, 
 Alex Kagoro
+Hazel Lim
 
 #### Backend Contributors
 Luke Risser, 
 Mukisa Serufusa, 
-Hazel Lim
