@@ -4,6 +4,24 @@ import { useState } from 'react';
 import Head from 'next/head';
 import { FaRegCheckCircle } from "react-icons/fa";
 import { MdNotInterested } from "react-icons/md";
+import mysql from 'mysql2';
+
+mysql_connect( {
+  type: "mysql",
+  host: "localhost",
+  port: 3306,             // Connect to Superbase
+  username: "root",
+  password: "mysql",
+  database: "mysql",
+  entities: [
+      "https://supabase/project/alvmuuodakpsjwfvmspk/database" + "/entity/*.ts"
+  ],
+  synchronize: true,
+  logging: false
+} )
+
+let parkURL = window.location.href
+let parkName = mysql_query("SELECT name FROM park WHERE " + parkURL + " = park.link_url")  // Get park name from URL and map to UUID
 
 export default function TrailPage() {
   const [expandedRules, setExpandedRules] = useState(false);
@@ -17,7 +35,7 @@ export default function TrailPage() {
   return (
     <div className="relative min-h-screen bg-gray-50 p-4">
       <Head>
-        <title>White Rocks Trail</title>
+        <title>{{parkName}}</title>
       </Head>
 
       {/* Sources Popup */}
@@ -73,7 +91,7 @@ export default function TrailPage() {
           <div className="relative h-36 w-full overflow-hidden bg-gray-700">
             <img 
               src="/img/whiterocks.jpg" 
-              alt="White Rocks Trail"
+              alt={{parkName}}
               className="w-full h-full object-cover"
             />
           </div>
@@ -81,7 +99,7 @@ export default function TrailPage() {
           {/* Sources Clickable section */}
           <div className="p-4 border-b cursor-pointer">
             <h2 className="text-lg font-semibold text-gray-700 flex justify-between items-center">
-              White Rocks Trail
+            {{parkName}}
               <span onClick={toggleSources} className="text-blue-500 text-sm hover:underline cursor-pointer">View Sources</span>
             </h2>
           </div>
