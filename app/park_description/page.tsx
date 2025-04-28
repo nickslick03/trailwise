@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Head from 'next/head';
+import BlackBoxPark from "@/components/BlackBoxPark";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { MdNotInterested } from "react-icons/md";
 
@@ -28,7 +29,7 @@ export default function TrailPage() {
             className="absolute inset-0 bg-black bg-opacity-70"
             style={{
               width: 'calc(100vw - 2rem)',
-              maxWidth: '28rem', 
+              maxWidth: '29rem', 
               left: '50%',
               transform: 'translateX(-50%)'
             }}
@@ -141,35 +142,8 @@ export default function TrailPage() {
           </div>
 
           {/* Leads Into section */}
-          <div className="p-4">
-            <h2 className="text-lg font-semibold text-gray-700 mb-2">Leads Into</h2>
-            
-            <div className="border rounded-lg p-3 bg-gray-800 text-white flex">
-              {/* Text Content */}
-              <div className="flex-1">
-                <div className="text-gray-100 font-medium">
-                  Gifford Pinchot State Park
-                </div>
-                <div className="mt-2">
-                  <p className="text-gray-300">Allows for:</p>
-                  <ul className="list-disc list-inside mt-1 text-gray-300 space-y-1">
-                    <li>Hiking</li>
-                    <li>Camp fires in specific areas</li>
-                    <li>Camping allowed at sites</li>
-                  </ul>
-                </div>
-              </div>
-              
-              {/* Connected Park Image */}
-              <div className="ml-4 flex-shrink-0 w-36 h-36">
-                <img
-                  src="/img/gifford.jpg"
-                  alt="Gifford Pinchot State Park"
-                  className="w-full h-full object-cover rounded"
-                />
-              </div>
-            </div>
-          </div>
+          <BlackBoxPark />
+          
         </div>
       </main>
     </div>
