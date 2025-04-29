@@ -7,7 +7,7 @@ import { BsSearch } from "react-icons/bs";
 function Search() {
     return (
         // Outer box
-        <div className="flex flex-row items-center gap-4 p-4 bg-white rounded-4xl shadow-md w-full m-auto fixed left-4 top-4 right-4 max-w-11/12">
+        <div className="flex flex-row items-center gap-4 p-4 bg-white rounded-4xl shadow-md max-w-sm w-full mx-auto fixed left-1/2 transform -translate-x-1/2 top-14 h-[7vh] text-gray-400">
             <BsSearch></BsSearch>
             <input type="search" placeholder="Search" className="w-full rounded-2xl"></input>
         </div>
