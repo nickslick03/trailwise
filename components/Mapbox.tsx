@@ -36,18 +36,15 @@ const Mapbox = ({ parks }: { parks: any[] }) => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          console.log('User location:', latitude, longitude);
 
-          map.on('load', () => {
-            map.flyTo({
-              center: [longitude, latitude],
-              zoom: 12
-            });
-            // marker at user's location
-            new mapboxgl.Marker({ color: 'blue' })
-              .setLngLat([longitude, latitude])
-              .addTo(map);
+          map.flyTo({
+            center: [longitude, latitude],
+            zoom: 12
           });
+          // marker at user's location
+          new mapboxgl.Marker({ color: 'blue' })
+            .setLngLat([longitude, latitude])
+            .addTo(map);
         },
         (error) => {
           console.error('Error getting location:', error);
@@ -59,7 +56,18 @@ const Mapbox = ({ parks }: { parks: any[] }) => {
   }, [map]);
 
   // Display parks on map
-  useEffect(() => {}, [map, parks]);
+  useEffect(() => {
+    if (map === null) return;
+
+    parks.forEach((park) => {
+      const marker = new mapboxgl.Marker({ color: 'green' })
+        .setLngLat([park.longitude, park.latitude])
+        .addTo(map);
+      marker.getElement().addEventListener('click', () => {
+        window.location.href = park.link_url;
+      });
+    });
+  }, [map, parks]);
 
   return error ? (
     <div className='w-full h-full flex justify-center items-center'>
