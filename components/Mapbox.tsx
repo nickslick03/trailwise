@@ -1,7 +1,11 @@
 // components/Mapbox.js
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import './Mapbox.css';
+import { createRoot } from 'react-dom/client';
+import ParkBox from './ParkBox';
+import convertRuleKey from '@/functions/convertRuleKeys';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -12,17 +16,16 @@ const Mapbox = ({ parks }: { parks: any[] }) => {
   // Initialize Mapbox
   useEffect(() => {
     try {
-      setMap(
-        new mapboxgl.Map({
-          container: 'map', // ID of the element to render the map
-          style: 'mapbox://styles/mapbox/streets-v11', // Map style
-          center: [-77.4, 41.5], // Starting position [lng, lat]
-          zoom: 9 // Starting zoom level
-        })
-      );
+      const mapInstance = new mapboxgl.Map({
+        container: 'map', // ID of the element to render the map
+        style: 'mapbox://styles/mapbox/streets-v11', // Map style
+        center: [-77.4, 41.5], // Starting position [lng, lat]
+        zoom: 9 // Starting zoom level
+      });
+      setMap(mapInstance);
 
       // Cleanup on unmount
-      return () => map?.remove();
+      return () => mapInstance.remove();
     } catch (error) {
       console.error('Error initializing Mapbox:', error);
       setError(true);
@@ -31,7 +34,8 @@ const Mapbox = ({ parks }: { parks: any[] }) => {
 
   // Display user's location
   useEffect(() => {
-    if (map === null) return;
+    if (!map) return;
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -41,7 +45,8 @@ const Mapbox = ({ parks }: { parks: any[] }) => {
             center: [longitude, latitude],
             zoom: 12
           });
-          // marker at user's location
+
+          // Marker at user's location
           new mapboxgl.Marker({ color: 'blue' })
             .setLngLat([longitude, latitude])
             .addTo(map);
@@ -57,16 +62,51 @@ const Mapbox = ({ parks }: { parks: any[] }) => {
 
   // Display parks on map
   useEffect(() => {
-    if (map === null) return;
+    if (!map) return;
+
+    const markers: mapboxgl.Marker[] = [];
 
     parks.forEach((park) => {
       const marker = new mapboxgl.Marker({ color: 'green' })
         .setLngLat([park.longitude, park.latitude])
         .addTo(map);
-      marker.getElement().addEventListener('click', () => {
-        window.location.href = park.link_url;
-      });
+
+      // Create a container for the React component
+      const popupContainer = document.createElement('div');
+      const root = createRoot(popupContainer);
+
+      // Render the React component into the container
+      root.render(
+        <ParkBox
+          id={park.id}
+          name={park.name}
+          rules={Object.entries(park.rules).map(
+            ([key, value]) => `${convertRuleKey(key)}: ${value}`
+          )}
+        />
+      );
+
+      // Create a popup and set its content to the React component
+      const popup = new mapboxgl.Popup({
+        offset: 25,
+        maxWidth: 'none',
+        closeButton: false,
+        className: 'custom-popup'
+      }).setDOMContent(popupContainer);
+
+      // Attach the popup to the marker
+      marker.setPopup(popup);
+
+      // Add marker to the array for cleanup
+      markers.push(marker);
     });
+
+    // Cleanup markers on unmount
+    return () => {
+      markers.forEach((marker) => {
+        marker.remove();
+      });
+    };
   }, [map, parks]);
 
   return error ? (
