@@ -1,0 +1,18 @@
+.mapboxgl-popup-close-button {
+  color: black !important; /* Change the icon color to black */
+  background: transparent !important; /* Ensure no background color */
+  border: none; /* Remove any border */
+  font-size: 16px; /* Adjust size if needed */
+  cursor: pointer; /* Ensure it looks clickable */
+}
+
+.custom-popup .mapboxgl-popup-content {
+  background: transparent !important; /* Remove the white background */
+  box-shadow: none !important; /* Remove the shadow */
+  padding: 0 !important; /* Remove padding */
+  border: none !important; /* Remove the border */
+}
+
+.custom-popup .mapboxgl-popup-tip {
+  display: none !important; /* Remove the popup arrow */
+}
