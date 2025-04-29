@@ -1,15 +1,33 @@
 // components/Mapbox.js
-import { useEffect, useMemo, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import './Mapbox.css';
-import { createRoot } from 'react-dom/client';
-import ParkBox from './ParkBox';
-import convertRuleKey from '@/functions/convertRuleKeys';
+import { JSX, useEffect, useState } from "react";
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
+import "./Mapbox.css";
+import { createRoot } from "react-dom/client";
+import ParkBox from "./ParkBox";
+import convertRuleKey from "@/functions/convertRuleKeys";
+import { Park } from "@/types/park";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-const Mapbox = ({ parks }: { parks: any[] }) => {
+/**
+ * @component Mapbox
+ * @description An interactive map component that displays parks with their locations and information.
+ * The component initializes a Mapbox map, displays the user's current location, and shows park
+ * markers with popups containing detailed information about each park.
+ *
+ * @param {Object} props - Component props
+ * @param {Park[]} props.parks - Array of park objects to display on the map, each containing
+ *                              location coordinates, name, and rules information
+ *
+ * @returns {JSX.Element} A responsive map container that displays parks with interactive markers,
+ *                       or an error message if the map fails to initialize
+ *
+ * @example
+ * // Usage example
+ * <Mapbox parks={parkData} />
+ */
+const Mapbox = ({ parks }: { parks: Park[] }): JSX.Element => {
   const [error, setError] = useState(false);
   const [map, setMap] = useState<mapboxgl.Map | null>(null);
 
@@ -17,17 +35,17 @@ const Mapbox = ({ parks }: { parks: any[] }) => {
   useEffect(() => {
     try {
       const mapInstance = new mapboxgl.Map({
-        container: 'map', // ID of the element to render the map
-        style: 'mapbox://styles/mapbox/streets-v11', // Map style
+        container: "map", // ID of the element to render the map
+        style: "mapbox://styles/mapbox/streets-v11", // Map style
         center: [-77.4, 41.5], // Starting position [lng, lat]
-        zoom: 9 // Starting zoom level
+        zoom: 9, // Starting zoom level
       });
       setMap(mapInstance);
 
       // Cleanup on unmount
       return () => mapInstance.remove();
     } catch (error) {
-      console.error('Error initializing Mapbox:', error);
+      console.error("Error initializing Mapbox:", error);
       setError(true);
     }
   }, []);
@@ -43,20 +61,20 @@ const Mapbox = ({ parks }: { parks: any[] }) => {
 
           map.flyTo({
             center: [longitude, latitude],
-            zoom: 12
+            zoom: 12,
           });
 
           // Marker at user's location
-          new mapboxgl.Marker({ color: 'blue' })
+          new mapboxgl.Marker({ color: "blue" })
             .setLngLat([longitude, latitude])
             .addTo(map);
         },
         (error) => {
-          console.error('Error getting location:', error);
-        }
+          console.error("Error getting location:", error);
+        },
       );
     } else {
-      console.error('Geolocation is not supported by this browser.');
+      console.error("Geolocation is not supported by this browser.");
     }
   }, [map]);
 
@@ -67,12 +85,12 @@ const Mapbox = ({ parks }: { parks: any[] }) => {
     const markers: mapboxgl.Marker[] = [];
 
     parks.forEach((park) => {
-      const marker = new mapboxgl.Marker({ color: 'green' })
+      const marker = new mapboxgl.Marker({ color: "green" })
         .setLngLat([park.longitude, park.latitude])
         .addTo(map);
 
       // Create a container for the React component
-      const popupContainer = document.createElement('div');
+      const popupContainer = document.createElement("div");
       const root = createRoot(popupContainer);
 
       // Render the React component into the container
@@ -81,17 +99,17 @@ const Mapbox = ({ parks }: { parks: any[] }) => {
           id={park.id}
           name={park.name}
           rules={Object.entries(park.rules).map(
-            ([key, value]) => `${convertRuleKey(key)}: ${value}`
+            ([key, value]) => `${convertRuleKey(key)}: ${value}`,
           )}
-        />
+        />,
       );
 
       // Create a popup and set its content to the React component
       const popup = new mapboxgl.Popup({
         offset: 25,
-        maxWidth: 'none',
+        maxWidth: "none",
         closeButton: false,
-        className: 'custom-popup'
+        className: "custom-popup",
       }).setDOMContent(popupContainer);
 
       // Attach the popup to the marker
@@ -110,11 +128,11 @@ const Mapbox = ({ parks }: { parks: any[] }) => {
   }, [map, parks]);
 
   return error ? (
-    <div className='w-full h-full flex justify-center items-center'>
+    <div className="w-full h-full flex justify-center items-center">
       Error Initializing Mapbox
     </div>
   ) : (
-    <div id='map' className='w-full h-full' />
+    <div id="map" className="w-full h-full" />
   );
 };
 
