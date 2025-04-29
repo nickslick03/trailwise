@@ -3,17 +3,15 @@
 function BlackBoxPark() {
     return (
         <div className="p-4">
-            <h2 className="text-lg font-semibold text-gray-700 mb-2">Leads Into</h2>
-            
             <div className="border rounded-lg p-3 bg-gray-800 text-white flex">
               {/* Text Content */}
               <div className="flex-1">
                 <div className="text-gray-100 font-medium">
                   Gifford Pinchot State Park
                 </div>
-                <div className="mt-2">
+                <div className="mt-2 text-sm">
                   <p className="text-gray-300">Allows for:</p>
-                  <ul className="list-disc list-inside mt-1 text-gray-300 space-y-1">
+                  <ul className="list-disc list-inside mt-1 text-gray-300">
                     <li>Hiking</li>
                     <li>Camp fires in specific areas</li>
                     <li>Camping allowed at sites</li>
@@ -22,7 +20,7 @@ function BlackBoxPark() {
               </div>
 
               {/* Park Image */}
-              <div className="ml-4 flex-shrink-0 w-36 h-36">
+              <div className="ml-4 flex-shrink-0 w-28 h-28">
                 <img
                   src="/img/gifford.jpg"
                   alt="Gifford Pinchot State Park"
