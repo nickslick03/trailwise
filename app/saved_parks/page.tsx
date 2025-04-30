@@ -10,7 +10,6 @@ import {
 } from "react-icons/bs";
 import NavigationBar from "@/components/NavigationBar";
 import ParkBox from "@/components/ParkBox";
-import { supabase } from "@/supabaseClient";
 
 interface Park {
   id: string;
@@ -37,21 +36,10 @@ export default function SavedParks() {
     const fetchSavedParks = async () => {
       setLoading(true);
 
-      const { data, error } = await supabase
-        .from("saved_park")
-        .select(
-          `
-          park:park (
-            uuid:park,
-            name,
-            rules
-          )
-        `
-        )
-        .eq("user", USER_ID);
-
-      if (error || !data) {
-        console.error("Supabase error", error);
+      const response = await fetch ("api/saved_parks");
+      const data = await response.json()  
+      if (!data) {
+        console.error("Supabase error");
         setAllParks([]);
       } else {
         const formatted: Park[] = data

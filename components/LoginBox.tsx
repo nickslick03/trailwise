@@ -7,16 +7,8 @@ import Image from 'next/image'
 export default function LoginButton() {
     const handleLogin = async (event) => { // i know this says its wrong.... but its not. It fixed everything!                                  
         event.preventDefault();            // please dont try to fix unless it messes with your code, if it does then good luck
-        const { error } = await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-                redirectTo: "http://localhost:3000/searchMap",
-            },
-    })
+        await fetch('api/google_login');
 
-        if (error) {
-            console.error('Error logging in:', error.message)
-        }
     }
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">
