@@ -1,13 +1,16 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import Head from "next/head";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  BsSearch,
+  BsFillFilterCircleFill,
+  BsArrowLeft
+} from "react-icons/bs";
 import NavigationBar from "@/components/NavigationBar";
 import ParkBox from "@/components/ParkBox";
 import { supabase } from "@/supabaseClient";
-import Head from "next/head";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { BsSearch } from "react-icons/bs";
-import { BsFillFilterCircleFill } from "react-icons/bs";
 
 interface Park {
   id: string;
@@ -15,149 +18,89 @@ interface Park {
   rules: string[];
 }
 
-export default function Saved_Parks() {
-  const [allParks, setUnfilteredParks] = useState<Park[]>([]);
-  const [parks, setParks] = useState<Park[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [currentSearchValue, setSearchVal] = useState<string>("")
-  const [campingFilter, setCampFilter] = useState<boolean>(false)
-  const [cookingFilter, setCookFilter] = useState<boolean>(false)
+const USER_ID = "dffeaf96-64a3-4bbc-a8d6-c90e89658aca";
 
+export default function SavedParks() {
   const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const onNavigate = (page: string) => {
-    if (page === "explore") {
-      router.push("/searchMap");
-    } else if (page === "saved") {
-      router.push("/saved_parks");
-    }
-  };
+  /* ---------------- state ---------------- */
+  const [allParks, setAllParks]   = useState<Park[]>([]);
+  const [loading, setLoading]     = useState(true);
+  const [search, setSearch]       = useState("");
+  const [campingFilter, setCampingFilter] = useState(false);
+  const [cookingFilter, setCookingFilter] = useState(false);
 
-  const userId = "dffeaf96-64a3-4bbc-a8d6-c90e89658aca"; // hardcoded user
-
+  /* -------------- fetch once ------------- */
   useEffect(() => {
     const fetchSavedParks = async () => {
       setLoading(true);
 
       const { data, error } = await supabase
         .from("saved_park")
-        .select(`
+        .select(
+          `
           park:park (
-            park,
+            uuid:park,
             name,
             rules
           )
-        `)
-        .eq("user", userId);
-
-      console.log("Fetched saved park data:", data);
-      console.log("Fetch error:", error);
+        `
+        )
+        .eq("user", USER_ID);
 
       if (error || !data) {
-        setParks([]);
+        console.error("Supabase error", error);
+        setAllParks([]);
       } else {
-        const formatted = data
-          .filter((item: any) => item.park !== null)
-          .map((item: any) => ({
-            id: item.park.uuid,
-            name: item.park.name,
-            rules: item.park.rules
-              ? Object.entries(item.park.rules).map(
-                  ([key, val]) => `${key}: ${val}`
+        const formatted: Park[] = data
+          .filter((row: any) => row.park)
+          .map((row: any) => ({
+            id: row.park.uuid,
+            name: row.park.name,
+            rules: row.park.rules
+              ? Object.entries(row.park.rules).map(
+                  ([k, v]) => `${k}: ${v}`
                 )
               : [],
           }));
-
-        setUnfilteredParks(formatted)
-        setParks(formatted);
+        setAllParks(formatted);
       }
 
       setLoading(false);
-      setSearchVal(checkInput(undefined))
-      document.getElementById("search")?.focus()
+      inputRef.current?.focus();
     };
 
     fetchSavedParks();
-  }, [currentSearchValue]);
+  }, []);
 
+  /* ------------ derived list ------------ */
+  const parks = useMemo(() => {
+    return allParks.filter((park) => {
+      const [campRule, cookRule] = [
+        park.rules[1]?.split(":")[1]?.trim().slice(0, 3) ?? "",
+        park.rules[2]?.split(":")[1]?.trim().slice(0, 3) ?? "",
+      ];
+
+      const passCamping = campingFilter ? campRule !== "No" : true;
+      const passCooking = cookingFilter ? cookRule !== "No" : true;
+      const passText =
+        search === "" ||
+        park.name.toLowerCase().includes(search.toLowerCase());
+
+      return passCamping && passCooking && passText;
+    });
+  }, [allParks, search, campingFilter, cookingFilter]);
+
+  /* ------------- handlers -------------- */
+  const handleNavigate = (page: string) => {
+    if (page === "explore") router.push("/searchMap");
+    else if (page === "saved") router.push("/saved_parks");
+    else router.push(`/${page}`);
+  };
+
+  /* --------------- UI ------------------ */
   if (loading) return <div className="p-4 text-center">Loading...</div>;
-
-
-  let searchPhrase = ""
-
-  // These two functions can be put together pretty easily. If we have time, I'll do that to save space
-  function checkInput(e: any) {
-      // Get the new added letter
-      let letter
-      searchPhrase = currentSearchValue
-      if(e != undefined){
-          letter = e.nativeEvent.data
-          // Add or remove from the string (if new letter or backspace)
-          if(letter != null){
-              searchPhrase += letter
-          }else{
-              searchPhrase = searchPhrase.slice(0, -1)
-          }
-      }
-
-      // Filters
-      // Some very gross mapping, because the database wasn't set up well for the filters.
-      // Essentially, I'm keeping only the relevant rules, removing the label at the beginning, and then seeing if the string begins with no
-      const parkRuleFilter = allParks.map(park => [park.rules[1].split(":")[1].substring(0, 3), park.rules[2].split(":")[1].substring(0, 3)])
-      const filteredParks = allParks.filter((park, index) => {
-        let pass = false
-        if(campingFilter){
-          if(parkRuleFilter[index][0].trim() !== "No") pass = true
-        }
-        if(cookingFilter){
-          if(campingFilter && pass) pass = parkRuleFilter[index][1].trim() !== "No" ? true : false
-        }
-        if(!cookingFilter && !campingFilter) pass = true
-        return pass;
-      });
-      const searchedParks = filteredParks.filter((item) => searchPhrase == "" || item.name.toLowerCase().includes(searchPhrase.toLowerCase()))
-      setSearchVal(searchPhrase)
-      setParks(searchedParks)
-
-      return searchPhrase
-  }
-
-  function modifyCheckbox(e: any) {
-      // Switch the current filter boolean depending on which box was clicked - update with state change
-      // Switch what boolean is being used to evaluate, since for some reason setting the new value doesn't happen until later
-      // Whatever is being sent will be flipped
-      const id = e.nativeEvent.srcElement.id
-      let camping = campingFilter
-      let cooking = cookingFilter
-      if(id == "camping"){
-        camping = !campingFilter
-        setCampFilter(!campingFilter)
-      }else {
-        cooking = !cookingFilter
-        setCookFilter(!cookingFilter)
-      }
-
-      // Filters
-      // Some very gross mapping, because the database wasn't set up well for the filters.
-      // Essentially, I'm keeping only the relevant rules, removing the label at the beginning, and then seeing if the string begins with no
-      const parkRuleFilter = allParks.map(park => [park.rules[1].split(":")[1].substring(0, 3), park.rules[2].split(":")[1].substring(0, 3)])
-      const filteredParks = allParks.filter((park, index) => {
-        let pass = false
-        if(camping){
-          if(parkRuleFilter[index][0].trim() !== "No") pass = true
-        }
-        if(cooking){
-          if(camping && pass) pass = parkRuleFilter[index][1].trim() !== "No" ? true : false
-        }
-        if(!cooking && !camping) pass = true
-        return pass;
-      });
-
-      // Check if there's a search
-      const searchedParks = filteredParks.filter((item) => currentSearchValue == "" || item.name.toLowerCase().includes(currentSearchValue.toLowerCase()))
-
-      setParks(searchedParks)
-  }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center p-4 bg-gray-100">
@@ -165,56 +108,84 @@ export default function Saved_Parks() {
         <title>Saved Parks</title>
       </Head>
 
-      <main className="max-w-md w-full mx-auto bg-white rounded-3xl shadow-xl overflow-hidden h-[90vh]">
-        <div className="p-4 pb-4">
-          <div className="h-10">
-            {/* Search Component */}
-            <div className="flex flex-row items-center gap-4 p-4 bg-white rounded-4xl shadow-md max-w-sm w-full mx-auto fixed left-1/2 transform -translate-x-1/2 top-14 h-[7vh] text-gray-400">
-                <BsSearch></BsSearch>
-                <input id="search" type="search" placeholder="Search" value={currentSearchValue} className="w-full rounded-2xl" onChange={checkInput}></input>
-            </div>
-            {/* Search Component */}
-          </div>
+      <main className="max-w-md w-full mx-auto bg-white rounded-3xl shadow-xl overflow-hidden h-[90vh] relative">
+        {/* ───────── header (back + search) ───────── */}
+        <div className="absolute inset-x-4 top-4 flex items-center gap-3 z-20">
+          <button
+            onClick={() => router.back()}
+            className="p-2 rounded-full bg-white shadow-md flex items-center justify-center"
+          >
+            <BsArrowLeft className="text-gray-600" size={18} />
+          </button>
 
-          <br />
+          <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-md w-full">
+            <BsSearch className="text-gray-400" size={18} />
+            <input
+              ref={inputRef}
+              id="search"
+              type="search"
+              placeholder="Search parks"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="flex-1 bg-transparent outline-none text-sm placeholder-gray-400 text-gray-900"
+            />
+          </div>
+        </div>
+
+        {/* ───────── content ───────── */}
+        <div className="pt-14 px-4 pb-4">
           <h1 className="text-gray-800 text-lg">Saved Parks</h1>
 
           <div className="flex-1 overflow-y-auto h-93 space-y-4 mt-2">
             {parks.length === 0 ? (
-              <p className="text-center text-gray-500">No saved parks found.</p>
+              <p className="text-center text-gray-500">
+                No saved parks found.
+              </p>
             ) : (
               parks.map((park) => (
-                <ParkBox key={park.id} id={park.id} name={park.name} rules={park.rules} />
+                <ParkBox
+                  key={park.id}
+                  id={park.id}
+                  name={park.name}
+                  rules={park.rules}
+                />
               ))
             )}
           </div>
         </div>
 
-        <div className="bottom-0 bg-white border-t z-10">
-          <div className="flex flex-col">
-            {/* Filter Component */}
-            <div className="fixed bottom-24 left-1/2 transform -translate-x-1/2 flex flex-col p-4 bg-white rounded-2xl shadow-md w-full max-w-fit">
-                {/* Title Section */}
-                <div className='flex flex-row gap-2 items-center text-gray-500'>
-                    <BsFillFilterCircleFill></BsFillFilterCircleFill>
-                    <div className="text-xl text-gray-500">Filters</div>
-                </div>
-                {/* Filters */}
-                <div className='flex flex-row gap-4 ml-6 text-gray-500'>
-                    <div className='flex flex-row gap-1'>
-                        <input id="camping" type='checkbox' checked={campingFilter} onChange={modifyCheckbox}></input>
-                        <div>Camping</div>
-                    </div>
-                    <div className='flex flex-row gap-1'>
-                        <input id="cooking" type='checkbox' checked={cookingFilter} onChange={modifyCheckbox}></input>
-                        <div>Cooking</div>
-                    </div>
-                </div>
-            </div>
-            {/* Filter Component */}
-            <NavigationBar onNavigate={onNavigate} />
+        {/* ───────── filters panel (centered, horizontal, moved down 8 px) ───────── */}
+        <div
+          className="absolute bottom-24 left-1/2 -translate-x-1/2 translate-y-2
+                     bg-white shadow-md rounded-2xl px-6 py-3 w-fit
+                     flex items-center gap-6 z-30"
+        >
+          <div className="flex items-center gap-2 text-gray-500">
+            <BsFillFilterCircleFill />
+            <span className="text-lg">Filters</span>
           </div>
+
+          <label className="flex items-center gap-2 text-gray-500 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={campingFilter}
+              onChange={() => setCampingFilter((v) => !v)}
+            />
+            Camping
+          </label>
+
+          <label className="flex items-center gap-2 text-gray-500 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={cookingFilter}
+              onChange={() => setCookingFilter((v) => !v)}
+            />
+            Cooking
+          </label>
         </div>
+
+        {/* ───────── nav bar (self-positioning) ───────── */}
+        <NavigationBar onNavigate={handleNavigate} />
       </main>
     </div>
   );
