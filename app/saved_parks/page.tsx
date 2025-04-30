@@ -15,6 +15,7 @@ import { supabase } from "@/supabaseClient";
 interface Park {
   id: string;
   name: string;
+  /** e.g. ["Camping: Yes", "Cooking: No", "Dogs: Yes"] */
   rules: string[];
 }
 
@@ -58,6 +59,7 @@ export default function SavedParks() {
           .map((row: any) => ({
             id: row.park.uuid,
             name: row.park.name,
+            // convert object -> ["Camping: Yes", …]
             rules: row.park.rules
               ? Object.entries(row.park.rules).map(
                   ([k, v]) => `${k}: ${v}`
@@ -76,14 +78,31 @@ export default function SavedParks() {
 
   /* ------------ derived list ------------ */
   const parks = useMemo(() => {
-    return allParks.filter((park) => {
-      const [campRule, cookRule] = [
-        park.rules[1]?.split(":")[1]?.trim().slice(0, 3) ?? "",
-        park.rules[2]?.split(":")[1]?.trim().slice(0, 3) ?? "",
-      ];
+    // helper — true if value missing OR doesn’t start with “no”
+    const isAllowed = (val?: string) =>
+      val === undefined || !/^no\b/i.test(val);
 
-      const passCamping = campingFilter ? campRule !== "No" : true;
-      const passCooking = cookingFilter ? cookRule !== "No" : true;
+    return allParks.filter((park) => {
+      // extract the first value for keys that start with “camp” / “cook”
+      let campingVal: string | undefined;
+      let cookingVal: string | undefined;
+
+      park.rules.forEach((r) => {
+        const [k, v] = r.split(":").map((s) => s.trim());
+        const keyLower = k.toLowerCase();
+        if (campingVal === undefined && keyLower.startsWith("camp")) {
+          campingVal = v?.toLowerCase();
+        } else if (cookingVal === undefined && keyLower.startsWith("cook")) {
+          cookingVal = v?.toLowerCase();
+        }
+      });
+
+      const passCamping =
+        !campingFilter || isAllowed(campingVal);
+
+      const passCooking =
+        !cookingFilter || isAllowed(cookingVal);
+
       const passText =
         search === "" ||
         park.name.toLowerCase().includes(search.toLowerCase());
@@ -154,7 +173,7 @@ export default function SavedParks() {
           </div>
         </div>
 
-        {/* ───────── filters panel (centered, horizontal, moved down 8 px) ───────── */}
+        {/* ───────── filters panel ───────── */}
         <div
           className="absolute bottom-24 left-1/2 -translate-x-1/2 translate-y-2
                      bg-white shadow-md rounded-2xl px-6 py-3 w-fit
@@ -184,7 +203,7 @@ export default function SavedParks() {
           </label>
         </div>
 
-        {/* ───────── nav bar (self-positioning) ───────── */}
+        {/* ───────── nav bar ───────── */}
         <NavigationBar onNavigate={handleNavigate} />
       </main>
     </div>
