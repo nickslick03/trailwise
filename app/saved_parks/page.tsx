@@ -1,20 +1,19 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import Head from "next/head";
-import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  BsSearch,
-  BsFillFilterCircleFill,
-  BsArrowLeft
-} from "react-icons/bs";
 import NavigationBar from "@/components/NavigationBar";
 import ParkBox from "@/components/ParkBox";
+import Head from "next/head";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  BsArrowLeft,
+  BsFillFilterCircleFill,
+  BsSearch
+} from "react-icons/bs";
 
 interface Park {
   id: string;
   name: string;
-  /** e.g. ["Camping: Yes", "Cooking: No", "Dogs: Yes"] */
   rules: string[];
 }
 
@@ -24,14 +23,12 @@ export default function SavedParks() {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  /* ---------------- state ---------------- */
-  const [allParks, setAllParks]   = useState<Park[]>([]);
-  const [loading, setLoading]     = useState(true);
-  const [search, setSearch]       = useState("");
+  const [allParks, setAllParks] = useState<Park[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
   const [campingFilter, setCampingFilter] = useState(false);
   const [cookingFilter, setCookingFilter] = useState(false);
 
-  /* -------------- fetch once ------------- */
   useEffect(() => {
     const fetchSavedParks = async () => {
       setLoading(true);
@@ -47,11 +44,8 @@ export default function SavedParks() {
           .map((row: any) => ({
             id: row.park.uuid,
             name: row.park.name,
-            // convert object -> ["Camping: Yes", …]
             rules: row.park.rules
-              ? Object.entries(row.park.rules).map(
-                  ([k, v]) => `${k}: ${v}`
-                )
+              ? Object.entries(row.park.rules).map(([k, v]) => `${k}: ${v}`)
               : [],
           }));
         setAllParks(formatted);
@@ -64,14 +58,11 @@ export default function SavedParks() {
     fetchSavedParks();
   }, []);
 
-  /* ------------ derived list ------------ */
   const parks = useMemo(() => {
-    // helper — true if value missing OR doesn’t start with “no”
     const isAllowed = (val?: string) =>
       val === undefined || !/^no\b/i.test(val);
 
     return allParks.filter((park) => {
-      // extract the first value for keys that start with “camp” / “cook”
       let campingVal: string | undefined;
       let cookingVal: string | undefined;
 
@@ -85,12 +76,8 @@ export default function SavedParks() {
         }
       });
 
-      const passCamping =
-        !campingFilter || isAllowed(campingVal);
-
-      const passCooking =
-        !cookingFilter || isAllowed(cookingVal);
-
+      const passCamping = !campingFilter || isAllowed(campingVal);
+      const passCooking = !cookingFilter || isAllowed(cookingVal);
       const passText =
         search === "" ||
         park.name.toLowerCase().includes(search.toLowerCase());
@@ -99,14 +86,12 @@ export default function SavedParks() {
     });
   }, [allParks, search, campingFilter, cookingFilter]);
 
-  /* ------------- handlers -------------- */
   const handleNavigate = (page: string) => {
     if (page === "explore") router.push("/searchMap");
     else if (page === "saved") router.push("/saved_parks");
     else router.push(`/${page}`);
   };
 
-  /* --------------- UI ------------------ */
   if (loading) return <div className="p-4 text-center">Loading...</div>;
 
   return (
@@ -116,7 +101,7 @@ export default function SavedParks() {
       </Head>
 
       <main className="max-w-md w-full mx-auto bg-white rounded-3xl shadow-xl overflow-hidden h-[90vh] relative">
-        {/* ───────── header (back + search) ───────── */}
+        {/* Header */}
         <div className="absolute inset-x-4 top-4 flex items-center gap-3 z-20">
           <button
             onClick={() => router.back()}
@@ -139,11 +124,11 @@ export default function SavedParks() {
           </div>
         </div>
 
-        {/* ───────── content ───────── */}
+        {/* Content */}
         <div className="pt-14 px-4 pb-4">
           <h1 className="text-gray-800 text-lg">Saved Parks</h1>
 
-          <div className="flex-1 overflow-y-auto h-93 space-y-4 mt-2">
+          <div className="flex flex-col gap-4 overflow-y-auto h-99 mt-2">
             {parks.length === 0 ? (
               <p className="text-center text-gray-500">
                 No saved parks found.
@@ -161,7 +146,7 @@ export default function SavedParks() {
           </div>
         </div>
 
-        {/* ───────── filters panel ───────── */}
+        {/* Filters */}
         <div
           className="absolute bottom-24 left-1/2 -translate-x-1/2 translate-y-2
                      bg-white shadow-md rounded-2xl px-6 py-3 w-fit
@@ -191,7 +176,7 @@ export default function SavedParks() {
           </label>
         </div>
 
-        {/* ───────── nav bar ───────── */}
+        {/* Nav bar */}
         <NavigationBar onNavigate={handleNavigate} />
       </main>
     </div>
