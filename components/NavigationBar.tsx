@@ -8,7 +8,7 @@ interface NavbarProps {
 
 const NavigationBar: React.FC<NavbarProps> = ({ onNavigate }) => {
   return (
-    <nav className="w-full max-w-md p-4 fixed bottom-30 bg-gray-800 h-16 flex justify-around items-center border-t border-gray-700">
+    <nav className="w-full max-w-md p-4 fixed bottom-5 bg-gray-800 h-16 flex justify-around items-center border-t border-gray-700 rounded-3xl">
       <button
         className="flex flex-col items-center text-white text-xs focus:outline-none"
         onClick={() => onNavigate('explore')}

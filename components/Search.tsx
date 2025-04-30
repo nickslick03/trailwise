@@ -1,17 +1,44 @@
-"use client";
+// components/Search.tsx
+'use client'
 
-import { BsSearch } from "react-icons/bs";
+import { useRouter } from 'next/navigation'
+import { IoMdArrowBack } from 'react-icons/io'
+import { BsSearch } from 'react-icons/bs'
 
-// Functionality for this to search needs to be added still - needs back end
-
-function Search() {
-    return (
-        // Outer box
-        <div className="flex flex-row items-center gap-4 p-4 bg-white rounded-4xl shadow-md max-w-sm w-full mx-auto fixed left-1/2 transform -translate-x-1/2 top-14 h-[7vh] text-gray-400">
-            <BsSearch></BsSearch>
-            <input type="search" placeholder="Search" className="w-full rounded-2xl"></input>
-        </div>
-    );
+interface SearchProps {
+  value?: string
+  onChange?: (term: string) => void
 }
 
-export default Search;
+export default function Search({ value, onChange }: SearchProps) {
+  const router = useRouter()
+
+  return (
+    <div className="absolute top-4 left-4 right-4 flex items-center gap-4 z-30">
+      {/* Back button container */}
+      <div className="bg-white border border-gray-200 rounded-full p-2 shadow-md">
+        <button onClick={() => router.back()} className="flex items-center justify-center">
+          <IoMdArrowBack size={20} className="text-gray-600" />
+        </button>
+      </div>
+
+      {/* Search bar container (fills remaining space) */}
+      <div
+        className="
+          flex items-center gap-2 px-4 py-2 bg-white
+          border border-gray-200 rounded-full shadow-md
+          flex-1
+        "
+      >
+        <BsSearch className="text-gray-400" size={18} />
+        <input
+          type="search"
+          placeholder="Search parks"
+          value={value}
+          onChange={(e) => onChange?.(e.target.value)}
+          className="flex-1 outline-none text-gray-700"
+        />
+      </div>
+    </div>
+  )
+}

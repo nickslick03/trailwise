@@ -1,15 +1,33 @@
 // components/Mapbox.js
-import { useEffect, useMemo, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './Mapbox.css';
 import { createRoot } from 'react-dom/client';
 import ParkBox from './ParkBox';
 import convertRuleKey from '@/functions/convertRuleKeys';
+import { Park } from '@/types/park';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-const Mapbox = ({ parks }: { parks: any[] }) => {
+/**
+ * @component Mapbox
+ * @description An interactive map component that displays parks with their locations and information.
+ * The component initializes a Mapbox map, displays the user's current location, and shows park
+ * markers with popups containing detailed information about each park.
+ *
+ * @param {Object} props - Component props
+ * @param {Park[]} props.parks - Array of park objects to display on the map, each containing
+ *                              location coordinates, name, and rules information
+ *
+ * @returns {JSX.Element} A responsive map container that displays parks with interactive markers,
+ *                       or an error message if the map fails to initialize
+ *
+ * @example
+ * // Usage example
+ * <Mapbox parks={parkData} />
+ */
+const Mapbox = ({ parks }: { parks: Park[] }): JSX.Element => {
   const [error, setError] = useState(false);
   const [map, setMap] = useState<mapboxgl.Map | null>(null);
 
@@ -78,7 +96,7 @@ const Mapbox = ({ parks }: { parks: any[] }) => {
       // Render the React component into the container
       root.render(
         <ParkBox
-          id={park.id}
+          id={park.park}
           name={park.name}
           rules={Object.entries(park.rules).map(
             ([key, value]) => `${convertRuleKey(key)}: ${value}`

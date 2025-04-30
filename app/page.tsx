@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import LoginButton from "@/components/LoginBox";
 import LoginPageBackgroundImage from "@/loginComponents/login_page_background_image";
 import Login_Image from "@/loginComponents/login_page_logo";
+import AuthChecker from "@/loginComponents/auth_checker";
 
+// Importing the LoginButton component
 export default function Home() {
   const router = useRouter();
   const [authChecked, setAuthChecked] = useState(false);
@@ -26,20 +28,31 @@ export default function Home() {
   if (!authChecked) return null;
 
   return (
+    
     <>
-      <LoginPageBackgroundImage />
+      <AuthChecker /> {/*Runs before anything else to check auth */}
 
-      <div className="relative min-h-screen flex flex-col items-center justify-center font-[family-name:var(--font-geist-sans)]">
-        {/* Logo */}
-        <div className="absolute top-10 left-1/2 transform -translate-x-1/2 z-40 w-[200px] h-[200px]">
-          <Login_Image />
-        </div>
+      <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
+        <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
 
-        {/* Login Box */}
-        <div className="z-50">
-          <LoginButton />
-        </div>
+          <div className="flex justify-center z-50">
+            <LoginButton />
+          </div>
+
+          <div className="flex items-center justify-center min-h-screen z-0">
+            <LoginPageBackgroundImage />
+          </div>
+
+          {/* Logo */}
+          <div className="absolute top-18 left-1/2 transform -translate-x-1/2 flex justify-center items-center z-50">
+            <div className="w-[200px] h-[200px]">
+              <Login_Image />
+            </div>
+          </div>
+
+        </main>
       </div>
+    </main>
     </>
   );
 }
