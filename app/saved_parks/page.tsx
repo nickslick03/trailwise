@@ -90,7 +90,7 @@ export default function Saved_Parks() {
           <br />
           <h1 className="text-gray-800 text-lg">Saved Parks</h1>
 
-          <div className="flex-1 overflow-y-auto h-82 space-y-4 mt-2">
+          <div className="flex-1 overflow-y-auto h-93 space-y-4 mt-2">
             {parks.length === 0 ? (
               <p className="text-center text-gray-500">No saved parks found.</p>
             ) : (
