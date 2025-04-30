@@ -1,11 +1,18 @@
-import React from "react";
+import Image from "next/image";
 
 const LoginPageBackgroundImage = () => {
-    return (
-      <div className="flex justify-center items-center py-4">
-        <img src="/mountain2.png" alt="Trailwise Background" className="fixed top-0 left-0 w-full h-full bg-cover bg-center z-50" />
-      </div>
-    );
-  };
+  return (
+    <div className="fixed inset-0 -z-10">
+      <Image
+        src="/mountain2.png"
+        alt="Trailwise Background"
+        fill
+        className="object-cover"
+        priority
+      />
+    </div>
+  );
+};
 
 export default LoginPageBackgroundImage;
+
