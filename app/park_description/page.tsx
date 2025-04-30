@@ -5,25 +5,26 @@ import Head from 'next/head';
 import BlackBoxPark from "@/components/BlackBoxPark";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { MdNotInterested } from "react-icons/md";
-import mysql from 'mysql2';
+import { IoIosBookmark } from "react-icons/io";
+//import mysql from 'mysql2';
 
-mysql_connect( {
-  type: "mysql",
-  host: "localhost",
-  port: 3306,             // Connect to Superbase
-  username: "root",
-  password: "mysql",
-  database: "mysql",
-  entities: [
-      "https://supabase/project/alvmuuodakpsjwfvmspk/database" + "/entity/*.ts"
-  ],
-  synchronize: true,
-  logging: false
-} )
+// mysql_connect( {
+//   type: "mysql",
+//   host: "localhost",
+//   port: 3306,             // Connect to Superbase
+//   username: "root",
+//   password: "mysql",
+//   database: "mysql",
+//   entities: [
+//       "https://supabase/project/alvmuuodakpsjwfvmspk/database" + "/entity/*.ts"
+//   ],
+//   synchronize: true,
+//   logging: false
+// } )
 
 let parkURL = window.location.href
-let parkName = mysql_query("SELECT name FROM park WHERE " + parkURL + " = park.link_url")  // Get park name from URL and map to UUID
-
+//let parkName = mysql_query("SELECT name FROM park WHERE " + parkURL + " = park.link_url")  // Get park name from URL and map to UUID
+let parkName = "White Rocks Trail"  // Placeholder for park name
 export default function ParkDescriptionPage() {
   const [expandedRules, setExpandedRules] = useState(false);
   const [expandedDescription, setExpandedDescription] = useState(false);
@@ -32,11 +33,15 @@ export default function ParkDescriptionPage() {
   const toggleRules = () => setExpandedRules(!expandedRules);
   const toggleDescription = () => setExpandedDescription(!expandedDescription);
   const toggleSources = () => setShowSources(!showSources);
+  const savePark = () => {
+    // Logic to save the park would go here
+  }
+
 
   return (
     <div className="relative min-h-screen bg-gray-50 p-4">
       <Head>
-        <title>{{parkName}}</title>
+        <title>{parkName}</title>
       </Head>
 
       {/* Sources Popup */}
@@ -87,12 +92,17 @@ export default function ParkDescriptionPage() {
       )}
 
       <main className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+        
         <div className={` ${showSources ? 'backdrop-blur-sm backdrop-brightness-90' : ''}`}>
           {/* Header Image */}
           <div className="relative h-36 w-full overflow-hidden bg-gray-700">
+            <button onClick={() => savePark()} className="flex items-center justify-center absolute top-4 right-4 bg-white rounded-full p-2 shadow-md">
+              <IoIosBookmark size={20} className="text-gray-700" />
+            </button>
+
             <img 
               src="/img/whiterocks.jpg" 
-              alt={{parkName}}
+              alt={parkName}
               className="w-full h-full object-cover"
             />
           </div>
@@ -100,7 +110,7 @@ export default function ParkDescriptionPage() {
           {/* Sources Clickable section */}
           <div className="p-4 border-b cursor-pointer">
             <h2 className="text-lg font-semibold text-gray-700 flex justify-between items-center">
-            {{parkName}}
+            {parkName}
               <span onClick={toggleSources} className="text-blue-500 text-sm hover:underline cursor-pointer">View Sources</span>
             </h2>
           </div>
