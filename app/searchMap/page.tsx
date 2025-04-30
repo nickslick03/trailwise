@@ -28,20 +28,10 @@ export default function SearchMap() {
       </Head>
 
       <main className="max-w-md w-full mx-auto bg-white rounded-3xl shadow-xl overflow-hidden h-[90vh] flex flex-col">
-        {/* ─── HEADER WITH BACK BUTTON ─── */}
-        <div className="flex items-center px-4 py-3 border-b">
-          <button
-            onClick={() => router.back()}
-            className="text-gray-600 hover:text-gray-800 focus:outline-none"
-          >
-            ← Back
-          </button>
-          <h1 className="flex-1 text-center font-medium">Parks Map</h1>
-        </div>
-
+        {/* everything else stays the same—no standalone back button */}
         <div className="relative flex-1 overflow-y-auto">
           <Mapbox parks={parks} />
-          <Search />
+          <Search />         {/* now includes its own back arrow */}
           <FilterComponent />
         </div>
 
