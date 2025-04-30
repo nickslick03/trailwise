@@ -9,6 +9,9 @@ export default function LoginButton() {
         event.preventDefault();            // please dont try to fix unless it messes with your code, if it does then good luck
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
+            options: {
+                redirectTo: "http://localhost:3000/searchMap",
+            },
     })
 
         if (error) {
