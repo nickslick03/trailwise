@@ -1,20 +1,19 @@
-// app/api/google-login/route.ts
-import { NextResponse } from 'next/server';
+// app/api/login/route.ts
+
 import { supabase } from '@/supabaseClient';
+import { NextResponse } from 'next/server';
 
+export async function GET(request: Request) {
+    const redirectTo = `${new URL(request.url).origin}/searchMap`;
 
-export async function GET() {
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/searchMap`, // customize your redirect
-        },
+        options: { redirectTo },
     });
 
-    if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error || !data.url) {
+        return NextResponse.json({ error: error?.message || 'No URL returned' }, { status: 500 });
     }
 
-  // Redirect user to Google's OAuth URL
     return NextResponse.redirect(data.url);
 }

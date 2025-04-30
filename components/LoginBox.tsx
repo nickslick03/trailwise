@@ -1,15 +1,23 @@
 'use client' // This tells Next.js this is a client-side component
 
-import { useState } from 'react'
-import { supabase } from '@/supabaseClient' // Ensure supabaseClient is set up correctly
+import { useState } from 'react' 
+import { supabase } from "@/supabaseClient";
 import Image from 'next/image'
 
-export default function LoginButton() {
-    const handleLogin = async (event) => { // i know this says its wrong.... but its not. It fixed everything!                                  
-        event.preventDefault();            // please dont try to fix unless it messes with your code, if it does then good luck
-        await fetch('api/google_login');
-
-    }
+    export default function LoginBox() {
+        const handleGoogleLogin = async (event) => { // i know this says its wrong.... but its not. It fixed everything!                                  
+            event.preventDefault();            // please dont try to fix unless it messes with your code, if it does then good luck
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: "http://localhost:3000/searchMap",
+                },
+        })
+    
+            if (error) {
+                console.error('Error logging in:', error.message)
+            }
+        }
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">
             
@@ -37,7 +45,7 @@ export default function LoginButton() {
                 <p className="p-2  text-center text-gray-700" >OR</p>
 
                 <button
-                    onClick={handleLogin}
+                    onClick={handleGoogleLogin}
                     className="flex justify-center items-center px-4 py-2 bg-white text-white rounded hover:bg-white"
                 >
                     <Image
