@@ -1,3 +1,4 @@
+// app/searchMap/page.tsx
 'use client'
 
 import Head from 'next/head'
@@ -27,13 +28,16 @@ export default function SearchMap() {
       </Head>
 
       <main className="max-w-md w-full mx-auto bg-white rounded-3xl shadow-xl overflow-hidden h-[90vh] flex flex-col">
-        {/* ─────────────── Back Button ─────────────── */}
-        <button
-          onClick={() => router.back()}
-          className="absolute top-4 left-4 px-3 py-1 bg-white rounded-full shadow hover:bg-gray-50"
-        >
-          ← Back
-        </button>
+        {/* ─── HEADER WITH BACK BUTTON ─── */}
+        <div className="flex items-center px-4 py-3 border-b">
+          <button
+            onClick={() => router.back()}
+            className="text-gray-600 hover:text-gray-800 focus:outline-none"
+          >
+            ← Back
+          </button>
+          <h1 className="flex-1 text-center font-medium">Parks Map</h1>
+        </div>
 
         <div className="relative flex-1 overflow-y-auto">
           <Mapbox parks={parks} />
@@ -42,7 +46,11 @@ export default function SearchMap() {
         </div>
 
         <div className="bg-white border-t z-10">
-          <NavigationBar onNavigate={(p) => router.push(p === 'explore' ? '/searchMap' : '/saved_parks')} />
+          <NavigationBar
+            onNavigate={(page) =>
+              router.push(page === 'explore' ? '/searchMap' : '/saved_parks')
+            }
+          />
         </div>
       </main>
     </div>
