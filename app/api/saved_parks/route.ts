@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import { supabase } from '@/supabaseClient';
+import { NextResponse } from 'next/server';
 const USER_ID = "dffeaf96-64a3-4bbc-a8d6-c90e89658aca";
 /**
  * Handle GET requests to the /api/parkLocations endpoint.
@@ -14,7 +14,7 @@ export async function GET(request: Request) {
         .select(
         `
         park:park (
-            uuid:park,
+            park,
             name,
             rules
         )
