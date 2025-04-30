@@ -7,7 +7,7 @@ import { BsFillFilterCircleFill } from "react-icons/bs";
 function FilterComponent() {
     return (
         // Outer box
-        <div className="fixed bottom-24 left-1/2 transform -translate-x-1/2 flex flex-col p-4 bg-white rounded-2xl shadow-md w-full max-w-sm max-w-fit">
+        <div className="fixed bottom-24 left-1/2 transform -translate-x-1/2 flex flex-col p-4 bg-white rounded-2xl shadow-md w-full max-w-fit">
             {/* Title Section */}
             <div className='flex flex-row gap-2 items-center text-gray-500'>
                 <BsFillFilterCircleFill></BsFillFilterCircleFill>
