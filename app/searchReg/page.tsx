@@ -1,12 +1,15 @@
 "use client";
 
 import Head from "next/head";
-import Search from "@/components/Search";
 import FilterComponent from "@/components/FilterComponent";
 import BlackBoxPark from "@/components/BlackBoxPark";
+import NavigationBar from "@/components/NavigationBar";
+import { useRouter } from 'next/navigation'
 //import NavigationBar from "@/components/NavigationBar";
 
 export default function SearchMap() {
+    const router = useRouter();
+    
     return (
         <div className="fixed inset-0 flex items-center justify-center p-4 bg-gray-100">
             <Head>
@@ -50,7 +53,15 @@ export default function SearchMap() {
                     <div className="sticky bottom-0 bg-white border-t">
                         <FilterComponent />
                     </div>
+
                     {/* <NavigationBar /> */}
+                    <div className="bg-white border-t z-10">
+                        <NavigationBar
+                            onNavigate={(page) =>
+                            router.push(page === 'explore' ? '/searchMap' : '/saved_parks')
+                            }
+                        />
+                    </div>
                 </div>
             </main>
         </div>

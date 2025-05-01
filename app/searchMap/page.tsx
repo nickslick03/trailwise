@@ -13,10 +13,10 @@ import {
 } from "react-icons/bs";
 
 export default function SearchMap() {
-  const router = useRouter()
+  const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [allParks, setAllParks] = useState<Park[]>([])
-  const [parks, setParks] = useState<Park[]>([])
+  const [allParks, setAllParks] = useState<Park[]>([]);
+  const [parks, setParks] = useState<Park[]>([]);
   const [search, setSearch]       = useState("");
   const [campingFilter, setCampingFilter] = useState(false);
   const [cookingFilter, setCookingFilter] = useState(false);
